@@ -1,10 +1,26 @@
+<!DOCTYPE html>
 <html>
-    <head></head>
+    <head>
+        <meta charset="utf-8">
+        <title>XML to JSON Converter</title>
+    </head>
+
     <body>
-        <p>
-            Modify this page to include a form where users can submit an XML file.
-            When they click on the submit button, the XML file should be converted into JSON and
-            returned to the user.
-        </p>
+
+        <h3>Please upload a valid XML file to be converted to JSON</h3>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ message }}
+
+            <p>
+                {{ form.file.errors }}
+
+                {{ form.file }}
+            </p>
+
+            <input type="submit"/>
+        </form>
     </body>
 </html>
