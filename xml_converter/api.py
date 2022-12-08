@@ -1,14 +1,30 @@
-from rest_framework.decorators import action
-from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
-from rest_framework.viewsets import ViewSet
+from rest_framework.views import APIView
+
+from .converter import convert
+from .serializers import ConvertSerializer
 
 
-class ConverterViewSet(ViewSet):
-    # Note this is not a restful API
-    # We still use DRF to assess how well you know the framework
-    parser_classes = [MultiPartParser]
+class ConverterView(APIView):
 
-    @action(methods=["POST"], detail=False, url_path="convert")
-    def convert(self, request, **kwargs):
-        return Response({})
+    serializer_class = ConvertSerializer
+
+    def post(self, request, format=None):
+
+        serializer = ConvertSerializer(data=request.data)
+
+        if serializer.is_valid():
+
+            xml_string = request.FILES['file'].read().decode('utf-8')
+
+            result = convert(xml_string)
+
+            return Response(result)
+
+        else:
+            return Response(
+                {
+                    "Success": False,
+                    "Error": serializer.errors
+                }
+            )
